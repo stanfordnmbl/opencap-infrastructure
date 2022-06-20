@@ -3,6 +3,14 @@ variable "region" {
   description = "Region"
   default     = "us-west-2"
 }
+variable "opencap_ecr_repository" {
+  type        = string
+  description = "Repository"
+}
+variable "openpose_ecr_repository" {
+  type        = string
+  description = "Repository"
+}
 variable "num_machines" {
   type        = number
   description = "Number of machines"

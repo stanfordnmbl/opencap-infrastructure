@@ -14,7 +14,7 @@ data "aws_ami" "latest_ecs" {
 
   filter {
       name   = "name"
-      values = ["amzn2-ami-ecs-hvm*"]
+      values = ["amzn2-ami-ecs-hvm*x86_64-ebs"]
   }
 
   filter {
@@ -27,7 +27,7 @@ resource "aws_launch_configuration" "ecs_launch_config" {
     image_id             = data.aws_ami.latest_ecs.image_id
     iam_instance_profile = aws_iam_instance_profile.ecs_agent.name
     security_groups      = [aws_security_group.ecs_sg.id]
-    user_data            = "#!/bin/bash\necho ECS_CLUSTER=opencap-processing >> /etc/ecs/ecs.config"
+    user_data            = "#!/bin/bash\necho ECS_CLUSTER=opencap_processing >> /etc/ecs/ecs.config"
     instance_type        = "m5.large"
     key_name             = aws_key_pair.debug.key_name
     associate_public_ip_address = true
