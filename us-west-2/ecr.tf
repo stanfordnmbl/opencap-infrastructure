@@ -1,5 +1,5 @@
-resource "aws_ecr_repository" "opencap-processing" {
-  name                 = "opencap/processing"
+resource "aws_ecr_repository" "opencap-opencap" {
+  name                 = "opencap/opencap"
   image_tag_mutability = "MUTABLE"
 
   image_scanning_configuration {
