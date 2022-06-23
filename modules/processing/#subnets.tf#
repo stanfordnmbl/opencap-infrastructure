@@ -17,7 +17,8 @@ resource "aws_subnet" "pub_subnet" {
 
 resource "aws_db_subnet_group" "db_subnet" {
   name       = "main"
-  subnet_ids = [aws_subnet.pub_subnet.0.id, aws_subnet.pub_subnet.1.id, aws_subnet.pub_subnet.2.id, aws_subnet.pub_subnet.3.id]
+  subnet_ids = {for idx, subnet in local.az_names: idx => az_name}
+  # ["${aws_subnet.pub_subnet.*.id}"]
 
   tags = {
     Name = "My DB subnet group"

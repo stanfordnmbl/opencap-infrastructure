@@ -36,7 +36,7 @@ resource "aws_launch_configuration" "ecs_launch_config" {
 
 resource "aws_autoscaling_group" "opencap_processing_asg" {
     name                      = "asg"
-    vpc_zone_identifier       = [aws_subnet.pub_subnet.id]
+    vpc_zone_identifier       = [values(aws_subnet.pub_subnet)[0].id]
     launch_configuration      = aws_launch_configuration.ecs_launch_config.name
 
     desired_capacity          = var.num_machines
@@ -44,4 +44,27 @@ resource "aws_autoscaling_group" "opencap_processing_asg" {
     max_size                  = var.num_machines
     health_check_grace_period = 300
     health_check_type         = "EC2"
+}
+
+resource "aws_rds_cluster_instance" "cluster_instances" {
+  count              = 1
+  identifier         = "opencap-db-instance-${count.index}"
+  cluster_identifier = aws_rds_cluster.default.id
+  instance_class     = "db.t4g.medium"
+  engine             = aws_rds_cluster.default.engine
+  engine_version     = aws_rds_cluster.default.engine_version
+  publicly_accessible = true
+  db_subnet_group_name = aws_db_subnet_group.db_subnet.id
+}
+
+
+resource "aws_rds_cluster" "default" {
+  cluster_identifier = "opencap-db-cluster"
+  availability_zones = ["us-west-2a", "us-west-2b", "us-west-2c"]
+  database_name      = "opencap"
+  master_username    = local.db_creds.username
+  master_password    = local.db_creds.password
+  engine             = "aurora-postgresql"
+  storage_encrypted  = true
+  db_subnet_group_name = aws_db_subnet_group.db_subnet.id
 }

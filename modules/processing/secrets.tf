@@ -2,14 +2,14 @@
  
 resource "random_password" "password" {
   length           = 16
-  special          = true
-  override_special = "_%@"
+  special          = false
+  override_special = "_%@/"
 }
  
 # Creating a AWS secret for database master account (Masteraccoundb)
  
 resource "aws_secretsmanager_secret" "secretmasterDB" {
-   name = "Masteraccoundb"
+   name = "OpenCapPostgreSQL8"
 }
  
 # Creating a AWS secret versions for database master account (Masteraccoundb)

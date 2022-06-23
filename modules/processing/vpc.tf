@@ -22,8 +22,8 @@ resource "aws_vpc" "vpc" {
 #   vpc_peering_connection_id = aws_vpc_peering_connection.global_analytics.id
 # }
 
-# resource "aws_route" "internet" {
-#   route_table_id = aws_route_table.public.id
-#   destination_cidr_block = "0.0.0.0/0"
-#   gateway_id = aws_internet_gateway.internet_gateway.id
-# }
+resource "aws_route" "internet" {
+  route_table_id = aws_route_table.public.id
+  destination_cidr_block = "0.0.0.0/0"
+  gateway_id = aws_internet_gateway.internet_gateway.id
+}
