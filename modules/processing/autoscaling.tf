@@ -41,7 +41,7 @@ resource "aws_autoscaling_group" "opencap_processing_asg" {
     launch_configuration      = aws_launch_configuration.ecs_launch_config.name
 
     desired_capacity          = var.num_machines
-    min_size                  = 1
+    min_size                  = 0
     max_size                  = var.num_machines
     health_check_grace_period = 300
     health_check_type         = "EC2"

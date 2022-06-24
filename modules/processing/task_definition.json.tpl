@@ -17,6 +17,10 @@
       "linuxParameters": null,
       "cpu": 0,
       "environment": [
+        {
+          "name": "DOCKERCOMPOSE",
+	  "value": "1"
+        }
       ],
       "secrets": [
         {
