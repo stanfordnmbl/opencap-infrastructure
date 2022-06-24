@@ -19,6 +19,10 @@
       "environment": [
       ],
       "secrets": [
+        {
+          "name": "API_TOKEN",
+	  "valueFrom": "${API_TOKEN}"
+        }
       ],
       "resourceRequirements": null,
       "ulimits": null,
@@ -72,7 +76,7 @@
       "mountPoints": [
         {
           "readOnly": false,
-          "containerPath": "/data",
+          "containerPath": "/openpose/data",
           "sourceVolume": "ipc"
         }
       ],
