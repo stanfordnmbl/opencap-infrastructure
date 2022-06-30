@@ -35,7 +35,7 @@
         {
           "readOnly": false,
           "containerPath": "/data",
-          "sourceVolume": "ipc"
+          "sourceVolume": "data"
         }
       ],
       "workingDirectory": null,
@@ -61,12 +61,20 @@
       "dockerLabels": null,
       "systemControls": [],
       "privileged": null,
-      "name": "code"
+      "name": "opencap"
     },
     {
       "dnsSearchDomains": [],
       "environmentFiles": null,
-      "logConfiguration": null,
+      "logConfiguration": {
+        "logDriver": "awslogs",
+        "secretOptions": null,
+        "options": {
+          "awslogs-group": "/ecs/opencap-openpose",
+          "awslogs-region": "${REGION}",
+          "awslogs-stream-prefix": "ecs"
+        }
+      },
       "entryPoint": [],
       "portMappings": [
       ],
@@ -74,14 +82,19 @@
       "linuxParameters": null,
       "cpu": 0,
       "environment": [],
-      "resourceRequirements": null,
+      "resourceRequirements" : [
+          {
+             "type" : "GPU", 
+             "value" : "1"
+          }
+      ],
       "ulimits": null,
       "dnsServers": [],
       "mountPoints": [
         {
           "readOnly": false,
           "containerPath": "/openpose/data",
-          "sourceVolume": "ipc"
+          "sourceVolume": "data"
         }
       ],
       "workingDirectory": null,
@@ -108,6 +121,6 @@
       "dockerLabels": {},
       "systemControls": [],
       "privileged": null,
-      "name": "bsc"
+      "name": "openpose"
     }
   ]
