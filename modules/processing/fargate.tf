@@ -32,6 +32,11 @@ resource "aws_ecs_service" "api" {
     security_groups = [aws_security_group.ecs_sg.id, aws_security_group.api_sg.id, aws_vpc.vpc.default_security_group_id]
     assign_public_ip = true
   }
+  load_balancer {
+    target_group_arn = aws_alb_target_group.opencap-api.arn
+    container_name   = "code"
+    container_port   = 80
+  }  
 }
 
 resource "aws_cloudwatch_log_group" "api-logs" {
