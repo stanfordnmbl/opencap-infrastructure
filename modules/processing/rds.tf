@@ -1,6 +1,6 @@
 resource "aws_rds_cluster_instance" "cluster_instances" {
   count              = 1
-  identifier         = "opencap-db-instance-${count.index}"
+  identifier         = "opencap-db-instance${var.env}-${count.index}"
   cluster_identifier = aws_rds_cluster.default.id
   instance_class     = "db.t4g.medium"
   engine             = aws_rds_cluster.default.engine
@@ -9,7 +9,7 @@ resource "aws_rds_cluster_instance" "cluster_instances" {
   db_subnet_group_name = aws_db_subnet_group.db_subnet.id
 }
 resource "aws_rds_cluster" "default" {
-  cluster_identifier = "opencap-db-cluster"
+  cluster_identifier = "opencap-db-cluster${var.env}"
   availability_zones = ["us-west-2a", "us-west-2b", "us-west-2c"]
   database_name      = "opencap"
   master_username    = local.db_creds.username

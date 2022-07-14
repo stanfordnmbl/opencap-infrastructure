@@ -1,5 +1,5 @@
 resource "aws_ecs_cluster" "cluster" {
-  name = "opencap-api-cluster"
+  name = "opencap-api-cluster${var.env}"
 
   setting {
     name  = "containerInsights"
@@ -18,10 +18,10 @@ resource "aws_ecs_cluster_capacity_providers" "cluster" {
 }
 
 resource "aws_ecs_service" "api" {
-  name            = "api-server"
+  name            = "api-server${var.env}"
   cluster         = aws_ecs_cluster.cluster.id
   task_definition = aws_ecs_task_definition.task_opencap_api.arn
-  desired_count   = 1
+  desired_count   = 2
   deployment_minimum_healthy_percent = 0
   capacity_provider_strategy {
     capacity_provider = "FARGATE"
@@ -40,7 +40,7 @@ resource "aws_ecs_service" "api" {
 }
 
 resource "aws_cloudwatch_log_group" "api-logs" {
-  name              = "/ecs/opencap-api"
+  name              = "/ecs/opencap-api${var.env}"
   retention_in_days = 90
 }
 
@@ -48,10 +48,12 @@ data "template_file" "opencap_api_template" {
     template = file("../modules/processing/task_api.json.tpl")
     vars = {
         REGION = "${var.region}"
+        ENV = "${var.env}"
         OPENCAP_API = "${var.opencap_api_ecr_repository}"
         API_TOKEN = "arn:aws:secretsmanager:us-west-2:660440363484:secret:APICredentials-Dag8bw:api_token::"
         API_AWS_KEY = "arn:aws:secretsmanager:us-west-2:660440363484:secret:APICredentials-Dag8bw:aws_access_key_id::"
         API_AWS_SECRET = "arn:aws:secretsmanager:us-west-2:660440363484:secret:APICredentials-Dag8bw:aws_secret_access_key::"
+        SENDGRID_API_KEY = "arn:aws:secretsmanager:us-west-2:660440363484:secret:APICredentials-Dag8bw:sendgrid_api_key::"
         DB_HOST = aws_rds_cluster.default.endpoint
         DB_USER_ARN = "${data.aws_secretsmanager_secret.secretmasterDB.arn}:username::"
         DB_PASS_ARN = "${data.aws_secretsmanager_secret.secretmasterDB.arn}:password::"
@@ -60,16 +62,16 @@ data "template_file" "opencap_api_template" {
 
 resource "aws_ecs_task_definition" "task_opencap_api" {
   network_mode          = "awsvpc"
-  family                = "opencap-api"
+  family                = "opencap-api${var.env}"
   container_definitions = data.template_file.opencap_api_template.rendered
   execution_role_arn    = aws_iam_role.ecs_tasks_execution_role.arn
-  memory		= 1024
-  cpu                   = 512
+  memory		= 8192
+  cpu                   = 2048
   requires_compatibilities = ["FARGATE"]
 }
 
 resource "aws_lb" "opencap-api" {
-  name               = "opencap-api"
+  name               = "opencap-api${var.env}"
   internal           = false
   load_balancer_type = "application"
   security_groups    = [aws_security_group.ecs_sg.id, aws_security_group.api_sg.id, aws_vpc.vpc.default_security_group_id]
@@ -79,7 +81,7 @@ resource "aws_lb" "opencap-api" {
 }
  
 resource "aws_alb_target_group" "opencap-api" {
-  name        = "opencap-api"
+  name        = "opencap-api${var.env}"
   port        = 80
   protocol    = "HTTP"
   vpc_id      = aws_vpc.vpc.id

@@ -6,7 +6,7 @@
         "logDriver": "awslogs",
         "secretOptions": null,
         "options": {
-          "awslogs-group": "/ecs/opencap-processing",
+          "awslogs-group": "/ecs/opencap-processing${ENV}",
           "awslogs-region": "${REGION}",
           "awslogs-stream-prefix": "ecs"
         }
@@ -35,7 +35,7 @@
         {
           "readOnly": false,
           "containerPath": "/data",
-          "sourceVolume": "data"
+          "sourceVolume": "data${ENV}"
         }
       ],
       "workingDirectory": null,
@@ -70,7 +70,7 @@
         "logDriver": "awslogs",
         "secretOptions": null,
         "options": {
-          "awslogs-group": "/ecs/opencap-openpose",
+          "awslogs-group": "/ecs/opencap-openpose${ENV}",
           "awslogs-region": "${REGION}",
           "awslogs-stream-prefix": "ecs"
         }
@@ -94,7 +94,7 @@
         {
           "readOnly": false,
           "containerPath": "/openpose/data",
-          "sourceVolume": "data"
+          "sourceVolume": "data${ENV}"
         }
       ],
       "workingDirectory": null,

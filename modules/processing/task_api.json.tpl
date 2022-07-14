@@ -6,7 +6,7 @@
         "logDriver": "awslogs",
         "secretOptions": null,
         "options": {
-          "awslogs-group": "/ecs/opencap-api",
+          "awslogs-group": "/ecs/opencap-api${ENV}",
           "awslogs-region": "${REGION}",
           "awslogs-stream-prefix": "ecs"
         }
@@ -60,6 +60,10 @@
         {
           "name": "DB_PASS",
           "valueFrom": "${DB_PASS_ARN}"
+        },
+        {
+          "name": "SENDGRID_API_KEY",
+          "valueFrom": "${SENDGRID_API_KEY}"
         }
       ],
       "resourceRequirements": null,

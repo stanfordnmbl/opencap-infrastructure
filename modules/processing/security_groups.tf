@@ -25,3 +25,14 @@ resource "aws_security_group" "api_sg" {
         cidr_blocks     = ["0.0.0.0/0"]
     }
 }
+resource "aws_security_group" "debug" {
+    vpc_id      = aws_vpc.vpc.id
+    name = "api-debug${var.env}"
+
+    ingress {
+        from_port       = 8000
+        to_port         = 8000
+        protocol        = "tcp"
+        cidr_blocks     = ["0.0.0.0/0"]
+    }
+}
