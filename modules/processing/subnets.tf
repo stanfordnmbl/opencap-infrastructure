@@ -8,7 +8,7 @@ locals {
 
 resource "aws_subnet" "pub_subnet" {
     vpc_id                  = aws_vpc.vpc.id
-    cidr_block              = cidrsubnet(var.cidr[var.region], 4, each.key)
+    cidr_block              = cidrsubnet(var.cidr[var.env], 4, each.key)
 
     for_each                = {for idx, az_name in local.az_names: idx => az_name}
     availability_zone       = local.az_names[each.key]

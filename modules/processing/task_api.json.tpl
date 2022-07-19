@@ -29,7 +29,7 @@
         },
         {
           "name": "HOST",
-	  "value": "api.opencap.ai"
+	  "value": "${API_HOST}"
         },
         {
           "name": "PROTOCOL",

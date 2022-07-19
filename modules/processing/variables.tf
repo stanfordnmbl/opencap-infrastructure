@@ -20,6 +20,11 @@ variable "opencap_api_ecr_repository" {
   type        = string
   description = "Repository"
 }
+variable "api_host" {
+  type        = string
+  description = "Repository"
+  default     = "api.opencap.ai"
+}
 variable "num_machines" {
   type        = number
   description = "Number of machines"
@@ -30,22 +35,14 @@ variable "num_machines" {
 variable "cidr" {
   type = map(string)
   default = {
-    "us-west-2" = "172.31.0.0/16"
-    "us-west-1" = "172.39.0.0/16"
-    "eu-west-1" = "172.35.0.0/16"
-    "eu-central-1" = "172.36.0.0/16"
-    "ap-northeast-1" = "172.37.0.0/16"
-    "us-east-1" = "172.38.0.0/16"
+    "" = "172.31.0.0/16"
+    "-dev" = "172.39.0.0/16"
   }
 }
 variable "subnet_cidr" {
   type = map(string)
   default = {
-    "us-west-2" = "172.31.1.0/24"
-    "us-west-1" = "172.39.1.0/24"
-    "eu-west-1" = "172.35.1.0/24"
-    "eu-central-1" = "172.36.1.0/24"
-    "ap-northeast-1" = "172.37.1.0/24"
-    "us-east-1" = "172.38.1.0/24"
+    "" = "172.31.1.0/24"
+    "-env" = "172.39.1.0/24"
   }
 }

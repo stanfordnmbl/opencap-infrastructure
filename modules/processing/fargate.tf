@@ -50,6 +50,7 @@ data "template_file" "opencap_api_template" {
         REGION = "${var.region}"
         ENV = "${var.env}"
         OPENCAP_API = "${var.opencap_api_ecr_repository}"
+        API_HOST = "${var.api_host}"
         API_TOKEN = "arn:aws:secretsmanager:us-west-2:660440363484:secret:APICredentials-Dag8bw:api_token::"
         API_AWS_KEY = "arn:aws:secretsmanager:us-west-2:660440363484:secret:APICredentials-Dag8bw:aws_access_key_id::"
         API_AWS_SECRET = "arn:aws:secretsmanager:us-west-2:660440363484:secret:APICredentials-Dag8bw:aws_secret_access_key::"
@@ -119,7 +120,7 @@ resource "aws_alb_listener" "https" {
   protocol          = "HTTPS"
  
   ssl_policy        = "ELBSecurityPolicy-2016-08"
-  certificate_arn   = "arn:aws:acm:us-west-2:660440363484:certificate/b707f896-7b02-4b71-8382-380f3e9eb80c"
+  certificate_arn   = "arn:aws:acm:us-west-2:660440363484:certificate/94bf7dd8-3d86-420f-9086-f976d17afef1"
  
   default_action {
     target_group_arn = aws_alb_target_group.opencap-api.id

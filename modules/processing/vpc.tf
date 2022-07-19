@@ -1,9 +1,9 @@
 resource "aws_vpc" "vpc" {
-    cidr_block = var.cidr[var.region]
+    cidr_block = var.cidr[var.env]
     enable_dns_support   = true
     enable_dns_hostnames = true
     tags       = {
-        Name = "Terraform VPC"
+        Name = "Terraform VPC${var.env}"
     }
 }
 
