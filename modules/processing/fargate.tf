@@ -21,7 +21,7 @@ resource "aws_ecs_service" "api" {
   name            = "api-server${var.env}"
   cluster         = aws_ecs_cluster.cluster.id
   task_definition = aws_ecs_task_definition.task_opencap_api.arn
-  desired_count   = 2
+  desired_count   = var.api_servers
   deployment_minimum_healthy_percent = 0
   capacity_provider_strategy {
     capacity_provider = "FARGATE"
@@ -58,6 +58,7 @@ data "template_file" "opencap_api_template" {
         DB_HOST = aws_rds_cluster.default.endpoint
         DB_USER_ARN = "${data.aws_secretsmanager_secret.secretmasterDB.arn}:username::"
         DB_PASS_ARN = "${data.aws_secretsmanager_secret.secretmasterDB.arn}:password::"
+	DEBUG = var.env == "-dev" ? "True" : "False"
     }
 }
 
@@ -66,8 +67,8 @@ resource "aws_ecs_task_definition" "task_opencap_api" {
   family                = "opencap-api${var.env}"
   container_definitions = data.template_file.opencap_api_template.rendered
   execution_role_arn    = aws_iam_role.ecs_tasks_execution_role.arn
-  memory		= 8192
-  cpu                   = 2048
+  memory		= var.api_memory # 8192
+  cpu                   = var.api_cpu #2048
   requires_compatibilities = ["FARGATE"]
 }
 
@@ -95,6 +96,7 @@ resource "aws_alb_target_group" "opencap-api" {
    matcher             = "200"
    timeout             = "3"
    unhealthy_threshold = "2"
+   path              = "/health/"
   }
 }
 

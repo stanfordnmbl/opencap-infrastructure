@@ -38,6 +38,10 @@
         {
           "name": "DB_HOST",
           "value": "${DB_HOST}"
+        },
+        {
+          "name": "DEBUG",
+          "value": "${DEBUG}"
         }
       ],
       "secrets": [

@@ -30,6 +30,21 @@ variable "num_machines" {
   description = "Number of machines"
   default     = 1
 }
+variable "api_memory" {
+  type        = number
+  description = "Fargate API memory"
+  default     = 16384
+}
+variable "api_cpu" {
+  type        = number
+  description = "Fargate API cpu"
+  default     = 4096
+}
+variable "api_servers" {
+  type        = number
+  description = "Fargate num servers"
+  default     = 2
+}
 
 
 variable "cidr" {
