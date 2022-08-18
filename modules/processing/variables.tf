@@ -16,6 +16,10 @@ variable "openpose_ecr_repository" {
   type        = string
   description = "Repository"
 }
+variable "mmpose_ecr_repository" {
+  type        = string
+  description = "Repository"
+}
 variable "opencap_api_ecr_repository" {
   type        = string
   description = "Repository"

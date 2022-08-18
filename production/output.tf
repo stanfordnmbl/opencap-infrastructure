@@ -7,6 +7,9 @@ output "openpose-ecr-repository" {
 output "opencap-api-ecr-repository" {
   value = aws_ecr_repository.opencap-api.repository_url
 }
+output "mmpose-ecr-repository" {
+  value = aws_ecr_repository.opencap-mmpose.repository_url
+}
 
 
 output "db-endpoint" {
