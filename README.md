@@ -1,6 +1,6 @@
-# Starting a new region
+# Updating infrastructure
 
-- copy a region and change variables
-- `terraform init` `terraform apply`
-- accept a peering connection in Virginia
-- add routing of CIDR to a given peering connection in Virginia
+After making changes in terraform scripts run, navigate to `dev` or `production` directory and run
+```
+terraform apply
+```
