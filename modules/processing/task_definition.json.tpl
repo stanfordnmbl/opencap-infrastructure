@@ -6,7 +6,7 @@
         "logDriver": "awslogs",
         "secretOptions": null,
         "options": {
-          "awslogs-group": "/ecs/opencap-processing${ENV}",
+          "awslogs-group": "/ecs/${APP_NAME}-processing${ENV}",
           "awslogs-region": "${REGION}",
           "awslogs-stream-prefix": "ecs"
         }
@@ -61,7 +61,7 @@
       "dockerLabels": null,
       "systemControls": [],
       "privileged": null,
-      "name": "opencap"
+      "name": "${APP_NAME}"
     },
     {
       "dnsSearchDomains": [],
@@ -70,7 +70,7 @@
         "logDriver": "awslogs",
         "secretOptions": null,
         "options": {
-          "awslogs-group": "/ecs/opencap-openpose${ENV}",
+          "awslogs-group": "/ecs/${APP_NAME}-openpose${ENV}",
           "awslogs-region": "${REGION}",
           "awslogs-stream-prefix": "ecs"
         }

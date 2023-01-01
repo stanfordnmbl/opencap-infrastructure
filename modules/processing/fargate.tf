@@ -1,5 +1,5 @@
 resource "aws_ecs_cluster" "cluster" {
-  name = "opencap-api-cluster${var.env}"
+  name = "${var.app_name}-api-cluster${var.env}"
 
   setting {
     name  = "containerInsights"
@@ -40,7 +40,7 @@ resource "aws_ecs_service" "api" {
 }
 
 resource "aws_cloudwatch_log_group" "api-logs" {
-  name              = "/ecs/opencap-api${var.env}"
+  name              = "/ecs/${var.app_name}-api${var.env}"
   retention_in_days = 90
 }
 
@@ -64,7 +64,7 @@ data "template_file" "opencap_api_template" {
 
 resource "aws_ecs_task_definition" "task_opencap_api" {
   network_mode          = "awsvpc"
-  family                = "opencap-api${var.env}"
+  family                = "${var.app_name}-api${var.env}"
   container_definitions = data.template_file.opencap_api_template.rendered
   execution_role_arn    = aws_iam_role.ecs_tasks_execution_role.arn
   memory		= var.api_memory # 8192
@@ -73,7 +73,7 @@ resource "aws_ecs_task_definition" "task_opencap_api" {
 }
 
 resource "aws_lb" "opencap-api" {
-  name               = "opencap-api${var.env}"
+  name               = "${var.app_name}-api${var.env}"
   internal           = false
   load_balancer_type = "application"
   security_groups    = [aws_security_group.ecs_sg.id, aws_security_group.api_sg.id, aws_vpc.vpc.default_security_group_id]
@@ -83,7 +83,7 @@ resource "aws_lb" "opencap-api" {
 }
  
 resource "aws_alb_target_group" "opencap-api" {
-  name        = "opencap-api${var.env}"
+  name        = "${var.app_name}-api${var.env}"
   port        = 80
   protocol    = "HTTP"
   vpc_id      = aws_vpc.vpc.id
@@ -122,7 +122,8 @@ resource "aws_alb_listener" "https" {
   protocol          = "HTTPS"
  
   ssl_policy        = "ELBSecurityPolicy-2016-08"
-  certificate_arn   = "arn:aws:acm:us-west-2:660440363484:certificate/94bf7dd8-3d86-420f-9086-f976d17afef1"
+  certificate_arn   = "arn:aws:acm:us-west-2:267878742673:certificate/240fc31a-125e-49d8-a88a-fa2edd8ff79f"
+#  "arn:aws:acm:us-west-2:660440363484:certificate/94bf7dd8-3d86-420f-9086-f976d17afef1"
  
   default_action {
     target_group_arn = aws_alb_target_group.opencap-api.id

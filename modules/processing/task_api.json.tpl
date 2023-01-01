@@ -6,7 +6,7 @@
         "logDriver": "awslogs",
         "secretOptions": null,
         "options": {
-          "awslogs-group": "/ecs/opencap-api${ENV}",
+          "awslogs-group": "/ecs/${APP_NAME}-api${ENV}",
           "awslogs-region": "${REGION}",
           "awslogs-stream-prefix": "ecs"
         }

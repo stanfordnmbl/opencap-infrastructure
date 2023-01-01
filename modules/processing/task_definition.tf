@@ -1,10 +1,10 @@
 resource "aws_cloudwatch_log_group" "logs" {
-  name              = "/ecs/opencap-processing${var.env}"
+  name              = "/ecs/${var.app_name}-processing${var.env}"
   retention_in_days = 90
 }
 
 resource "aws_cloudwatch_log_group" "openpose-logs" {
-  name              = "/ecs/opencap-openpose${var.env}"
+  name              = "/ecs/${var.app_name}-openpose${var.env}"
   retention_in_days = 90
 }
 

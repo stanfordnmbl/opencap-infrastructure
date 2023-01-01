@@ -29,6 +29,11 @@ variable "api_host" {
   description = "Repository"
   default     = "api.opencap.ai"
 }
+variable "app_name" {
+  type        = string
+  description = "App name"
+  default     = "opencap"
+}
 variable "num_machines" {
   type        = number
   description = "Number of machines"

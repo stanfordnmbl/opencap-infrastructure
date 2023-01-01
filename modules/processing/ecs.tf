@@ -1,3 +1,3 @@
 resource "aws_ecs_cluster" "ecs_cluster" {
-    name  = "opencap-processing-cluster${var.env}"
+    name  = "${var.app_name}-processing-cluster${var.env}"
 }
