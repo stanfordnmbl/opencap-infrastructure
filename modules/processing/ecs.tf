@@ -2,15 +2,6 @@ resource "aws_ecs_cluster" "ecs_cluster" {
     name  = "${var.app_name}-processing-cluster${var.env}"
 }
 
-# SQS keys
-locals {
-  container_vars = {    
-    sqs_access_key = aws_iam_access_key.task_sqs.id # TODO
-    sqs_secret_key = aws_iam_access_key.task_sqs.secret # TODO
-    sqs_name = aws_sqs_queue.task.name # TODO
-  }
-}
-
 data "aws_sqs_queue" "queue_name" {
   name = "${var.app_name}-sqs${var.env}"
 }
