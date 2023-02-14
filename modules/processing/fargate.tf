@@ -58,6 +58,7 @@ data "template_file" "opencap_api_template" {
         DB_HOST = aws_rds_cluster.default.endpoint
         DB_USER_ARN = "${data.aws_secretsmanager_secret.secretmasterDB.arn}:username::"
         DB_PASS_ARN = "${data.aws_secretsmanager_secret.secretmasterDB.arn}:password::"
+        SQS_URL =  data.aws_sqs_queue.queue_name.url
 	DEBUG = var.env == "-dev" ? "True" : "False"
     }
 }
