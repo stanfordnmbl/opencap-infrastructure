@@ -59,7 +59,7 @@ data "template_file" "opencap_api_template" {
         DB_USER_ARN = "${data.aws_secretsmanager_secret.secretmasterDB.arn}:username::"
         DB_PASS_ARN = "${data.aws_secretsmanager_secret.secretmasterDB.arn}:password::"
         SQS_URL =  data.aws_sqs_queue.queue_name.url
-        SQS_URL =  data.aws_sqs_queue.queue_name.name
+        SQS_NAME =  data.aws_sqs_queue.queue_name.name
 	DEBUG = var.env == "-dev" ? "True" : "False"
     }
 }
