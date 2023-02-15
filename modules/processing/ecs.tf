@@ -27,23 +27,20 @@ resource "aws_ecs_task_definition" "task_backend_worker" {
   family = "backend-worker"
   container_definitions = templatefile(
     "backend_container.json.tpl",
-    merge(
-      local.container_vars,
       {
         name       = "${var.app_name}-task-backend-worker${var.env}"
-        command    = ["celery", "-A", "django_aws", "worker", "--loglevel", "info"]
+        command    = ["celery", "-A", "mcserver", "worker", "--loglevel", "info"] # TODO, is this the right command?
         log_stream = aws_cloudwatch_log_stream.task_backend_worker.name
-      },
-    )
+      }
   )
-  depends_on = [aws_sqs_queue.task, aws_db_instance.task]
-  execution_role_arn = aws_iam_role.ecs_task_execution.arn
-  task_role_arn      = aws_iam_role.task_backend_task.arn
+  depends_on = [aws_sqs_queue.task, aws_db_instance.task] # TODO, do we need to database?
+  execution_role_arn = aws_iam_role.ecs_task_execution.arn # TODO, not clear what is needed here
+  task_role_arn      = aws_iam_role.task_backend_task.arn # TODO, not clear what is needed here
 }
 
 resource "aws_ecs_service" "task_backend_worker" {
   name                               = "${var.app_name}-task-backend-worker${var.env}"
-  cluster                            = aws_ecs_cluster.task.id
+  cluster                            = aws_ecs_cluster.task.id # TODO, what cluster is that?
   task_definition                    = aws_ecs_task_definition.task_backend_worker.arn
   desired_count                      = 1
   deployment_minimum_healthy_percent = 50
@@ -53,8 +50,8 @@ resource "aws_ecs_service" "task_backend_worker" {
   enable_execute_command             = true
 
   network_configuration {
-    security_groups  = [aws_security_group.task_ecs_backend.id]
-    subnets          = [aws_subnet.task_private_1.id, aws_subnet.task_private_2.id]
+    security_groups  = [aws_security_group.task_ecs_backend.id] # TODO, what security group?
+    subnets          = [aws_subnet.task_private_1.id, aws_subnet.task_private_2.id] # TODO
     assign_public_ip = false
   }
 }
@@ -69,23 +66,20 @@ resource "aws_ecs_task_definition" "task_backend_beat" {
   family = "backend-beat"
   container_definitions = templatefile(
     "backend_container.json.tpl",
-    merge(
-      local.container_vars,
       {
         name       = "${var.app_name}-task-backend-beat${var.env}"
-        command    = ["celery", "-A", "django_aws", "beat", "--loglevel", "info"]
+        command    = ["celery", "-A", "mcserver", "beat", "--loglevel", "info"] # TODO, is this the right command?
         log_stream = aws_cloudwatch_log_stream.task_backend_beat.name
-      },
-    )
+      }
   )
-  depends_on = [aws_sqs_queue.task, aws_db_instance.task]
-  execution_role_arn = aws_iam_role.ecs_task_execution.arn
-  task_role_arn      = aws_iam_role.task_backend_task.arn
+  depends_on = [aws_sqs_queue.task, aws_db_instance.task] # TODO
+  execution_role_arn = aws_iam_role.ecs_task_execution.arn # TODO
+  task_role_arn      = aws_iam_role.task_backend_task.arn # TODO
 }
 
 resource "aws_ecs_service" "task_backend_beat" {
   name                               = "${var.app_name}-task-backend-beat${var.env}"
-  cluster                            = aws_ecs_cluster.task.id
+  cluster                            = aws_ecs_cluster.task.id # TODO
   task_definition                    = aws_ecs_task_definition.task_backend_beat.arn
   desired_count                      = 1
   deployment_minimum_healthy_percent = 50
@@ -95,8 +89,8 @@ resource "aws_ecs_service" "task_backend_beat" {
   enable_execute_command             = true
 
   network_configuration {
-    security_groups  = [aws_security_group.task_ecs_backend.id]
-    subnets          = [aws_subnet.task_private_1.id, aws_subnet.task_private_2.id]
+    security_groups  = [aws_security_group.task_ecs_backend.id] # TODO
+    subnets          = [aws_subnet.task_private_1.id, aws_subnet.task_private_2.id] # TODO
     assign_public_ip = false
   }
 }
