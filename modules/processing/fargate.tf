@@ -44,9 +44,8 @@ resource "aws_cloudwatch_log_group" "api-logs" {
   retention_in_days = 90
 }
 
-data "template_file" "opencap_api_template" {
-    template = file("../modules/processing/task_api.json.tpl")
-    vars = {
+locals {
+    opencap_api_template_common_context = {
         REGION = "${var.region}"
         ENV = "${var.env}"
         OPENCAP_API = "${var.opencap_api_ecr_repository}"
@@ -58,19 +57,64 @@ data "template_file" "opencap_api_template" {
         DB_HOST = aws_rds_cluster.default.endpoint
         DB_USER_ARN = "${data.aws_secretsmanager_secret.secretmasterDB.arn}:username::"
         DB_PASS_ARN = "${data.aws_secretsmanager_secret.secretmasterDB.arn}:password::"
-	DEBUG = var.env == "-dev" ? "True" : "False"
+        REDIS_URL = aws_elasticache_cluster.redis_cache.cache_nodes.0.address
+        DEBUG = var.env == "-dev" ? "True" : "False"
+        CMD = ""
     }
 }
+
+
+data "template_file" "opencap_api_template" {
+    template = file("../modules/processing/task_api.json.tpl")
+    vars = local.opencap_api_template_common_context
+}
+
+data "template_file" "opencap_api_celery_template" {
+    template = file("../modules/processing/task_api.json.tpl")
+    vars = merge(local.opencap_api_template_common_context, {
+        CMD = join(",", ["celery", "-A", "mcserver", "worker", "--loglevel", "info"])
+    })
+}
+
+data "template_file" "opencap_api_celery_beat_template" {
+    template = file("../modules/processing/task_api.json.tpl")
+    vars = merge(local.opencap_api_template_common_context, {
+        CMD = join(",", ["celery", "-A", "mcserver", "beat", "--loglevel", "info"])
+    })
+}
+
+
 
 resource "aws_ecs_task_definition" "task_opencap_api" {
   network_mode          = "awsvpc"
   family                = "${var.app_name}-api${var.env}"
   container_definitions = data.template_file.opencap_api_template.rendered
   execution_role_arn    = aws_iam_role.ecs_tasks_execution_role.arn
-  memory		= var.api_memory # 8192
+  memory                = var.api_memory # 8192
   cpu                   = var.api_cpu #2048
   requires_compatibilities = ["FARGATE"]
 }
+
+resource "aws_ecs_task_definition" "task_opencap_api_celery" {
+  network_mode          = "awsvpc"
+  family                = "${var.app_name}-api${var.env}"
+  container_definitions = data.template_file.opencap_api_celery_template.rendered
+  execution_role_arn    = aws_iam_role.ecs_tasks_execution_role.arn
+  memory                = var.api_memory # 8192
+  cpu                   = var.api_cpu #2048
+  requires_compatibilities = ["FARGATE"]
+}
+
+resource "aws_ecs_task_definition" "task_opencap_api_celery_beat" {
+  network_mode          = "awsvpc"
+  family                = "${var.app_name}-api${var.env}"
+  container_definitions = data.template_file.opencap_api_celery_beat_template.rendered
+  execution_role_arn    = aws_iam_role.ecs_tasks_execution_role.arn
+  memory                = var.api_memory # 8192
+  cpu                   = var.api_cpu #2048
+  requires_compatibilities = ["FARGATE"]
+}
+
 
 resource "aws_lb" "opencap-api" {
   name               = "${var.app_name}-api${var.env}"
