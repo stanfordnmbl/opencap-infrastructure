@@ -19,7 +19,7 @@
           "containerPort": 80
         }
       ],
-      "command": [],
+      "command": ${jsonencode(split(",", CMD))},
       "linuxParameters": null,
       "cpu": 0,
       "environment": [
@@ -68,6 +68,10 @@
         {
           "name": "SENDGRID_API_KEY",
           "valueFrom": "${SENDGRID_API_KEY}"
+        },
+        {
+            "name": "REDIS_URL",
+            "valueFrom": "${REDIS_URL}"
         }
       ],
       "resourceRequirements": null,
