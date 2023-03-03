@@ -7,6 +7,11 @@ data "aws_iam_policy_document" "ecs_tasks_execution_role" {
       identifiers = ["ecs-tasks.amazonaws.com"]
     }
   }
+
+  statement {
+    actions = ["ssm:GetParameters"]
+    resources = ["*"]
+  }
 }
 
 resource "aws_iam_role" "ecs_tasks_execution_role" {
