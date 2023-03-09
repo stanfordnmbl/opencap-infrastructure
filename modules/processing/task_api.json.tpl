@@ -25,15 +25,15 @@
       "environment": [
         {
           "name": "AWS_STORAGE_BUCKET_NAME",
-	  "value": "mc-mocap-video-storage"
+          "value": "mc-mocap-video-storage"
         },
         {
           "name": "HOST",
-	  "value": "${API_HOST}"
+          "value": "${API_HOST}"
         },
         {
           "name": "PROTOCOL",
-	  "value": "https"
+          "value": "https"
         },
         {
           "name": "DB_HOST",
@@ -47,15 +47,15 @@
       "secrets": [
         {
           "name": "API_TOKEN",
-	  "valueFrom": "${API_TOKEN}"
+          "valueFrom": "${API_TOKEN}"
         },
         {
           "name": "AWS_ACCESS_KEY_ID",
-	  "valueFrom": "${API_AWS_KEY}"
+          "valueFrom": "${API_AWS_KEY}"
         },
         {
           "name": "AWS_SECRET_ACCESS_KEY",
-	  "valueFrom": "${API_AWS_SECRET}"
+          "valueFrom": "${API_AWS_SECRET}"
         },
         {
           "name": "DB_USER",
@@ -71,7 +71,7 @@
         },
         {
             "name": "REDIS_URL",
-            "valueFrom": "${REDIS_URL}"
+            "value": "${REDIS_URL}"
         }
       ],
       "resourceRequirements": null,
