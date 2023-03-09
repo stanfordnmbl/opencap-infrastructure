@@ -42,6 +42,10 @@
         {
           "name": "DEBUG",
           "value": "${DEBUG}"
+        },
+        {
+          "name": "REDIS_URL",
+          "value": "${REDIS_URL}"
         }
       ],
       "secrets": [
@@ -68,11 +72,7 @@
         {
           "name": "SENDGRID_API_KEY",
           "valueFrom": "${SENDGRID_API_KEY}"
-        },
-        {
-            "name": "REDIS_URL",
-            "value": "${REDIS_URL}"
-        }
+        }        
       ],
       "resourceRequirements": null,
       "ulimits": null,
