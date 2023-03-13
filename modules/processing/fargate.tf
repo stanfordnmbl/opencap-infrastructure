@@ -67,7 +67,9 @@ locals {
 
 data "template_file" "opencap_api_template" {
     template = file("../modules/processing/task_api.json.tpl")
-    vars = local.opencap_api_template_common_context
+    vars = merge(local.opencap_api_template_common_context, {
+        CMD = join(",", ["uwsgi", "--show-config"])
+    })
 }
 
 data "template_file" "opencap_api_celery_template" {
