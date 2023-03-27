@@ -39,6 +39,40 @@ resource "aws_ecs_service" "api" {
   }  
 }
 
+resource "aws_ecs_service" "api-celery" {
+  name            = "api-server-celery${var.env}"
+  cluster         = aws_ecs_cluster.cluster.id
+  task_definition = aws_ecs_task_definition.task_opencap_api_celery.arn
+  desired_count   = 1
+  deployment_minimum_healthy_percent = 0
+  capacity_provider_strategy {
+    capacity_provider = "FARGATE"
+    weight = 100
+  }
+  network_configuration {
+    subnets = [aws_subnet.pub_subnet.0.id, aws_subnet.pub_subnet.1.id, aws_subnet.pub_subnet.2.id, aws_subnet.pub_subnet.3.id]
+    security_groups = [aws_security_group.ecs_sg.id, aws_vpc.vpc.default_security_group_id]
+    assign_public_ip = false
+  }
+}
+
+resource "aws_ecs_service" "api-celery-beat" {
+  name            = "api-server-celery-beat${var.env}"
+  cluster         = aws_ecs_cluster.cluster.id
+  task_definition = aws_ecs_task_definition.task_opencap_api_celery_beat.arn
+  desired_count   = 1
+  deployment_minimum_healthy_percent = 0
+  capacity_provider_strategy {
+    capacity_provider = "FARGATE"
+    weight = 100
+  }
+  network_configuration {
+    subnets = [aws_subnet.pub_subnet.0.id, aws_subnet.pub_subnet.1.id, aws_subnet.pub_subnet.2.id, aws_subnet.pub_subnet.3.id]
+    security_groups = [aws_security_group.ecs_sg.id, aws_vpc.vpc.default_security_group_id]
+    assign_public_ip = false
+  }
+}
+
 resource "aws_cloudwatch_log_group" "api-logs" {
   name              = "/ecs/${var.app_name}-api${var.env}"
   retention_in_days = 90
@@ -100,7 +134,7 @@ resource "aws_ecs_task_definition" "task_opencap_api" {
 
 resource "aws_ecs_task_definition" "task_opencap_api_celery" {
   network_mode          = "awsvpc"
-  family                = "${var.app_name}-api${var.env}"
+  family                = "${var.app_name}-api-worker${var.env}"
   container_definitions = data.template_file.opencap_api_celery_template.rendered
   execution_role_arn    = aws_iam_role.ecs_tasks_execution_role.arn
   memory                = var.api_memory # 8192
@@ -110,7 +144,7 @@ resource "aws_ecs_task_definition" "task_opencap_api_celery" {
 
 resource "aws_ecs_task_definition" "task_opencap_api_celery_beat" {
   network_mode          = "awsvpc"
-  family                = "${var.app_name}-api${var.env}"
+  family                = "${var.app_name}-api-beat${var.env}"
   container_definitions = data.template_file.opencap_api_celery_beat_template.rendered
   execution_role_arn    = aws_iam_role.ecs_tasks_execution_role.arn
   memory                = var.api_memory # 8192
