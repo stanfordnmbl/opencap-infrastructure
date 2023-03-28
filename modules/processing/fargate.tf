@@ -52,7 +52,7 @@ resource "aws_ecs_service" "api-celery" {
   network_configuration {
     subnets = [aws_subnet.pub_subnet.0.id, aws_subnet.pub_subnet.1.id, aws_subnet.pub_subnet.2.id, aws_subnet.pub_subnet.3.id]
     security_groups = [aws_security_group.ecs_sg.id, aws_security_group.api_sg.id, aws_vpc.vpc.default_security_group_id]
-    assign_public_ip = false
+    assign_public_ip = true
   }
 }
 
@@ -69,7 +69,7 @@ resource "aws_ecs_service" "api-celery-beat" {
   network_configuration {
     subnets = [aws_subnet.pub_subnet.0.id, aws_subnet.pub_subnet.1.id, aws_subnet.pub_subnet.2.id, aws_subnet.pub_subnet.3.id]
     security_groups = [aws_security_group.ecs_sg.id, aws_security_group.api_sg.id, aws_vpc.vpc.default_security_group_id]
-    assign_public_ip = false
+    assign_public_ip = true
   }
 }
 
