@@ -24,3 +24,11 @@ resource "aws_db_subnet_group" "db_subnet" {
   }
 }
 
+resource "aws_elasticache_subnet_group" "redis_subnet" {
+  name       = "redis${var.env}"
+  subnet_ids = [aws_subnet.pub_subnet.0.id, aws_subnet.pub_subnet.1.id, aws_subnet.pub_subnet.2.id, aws_subnet.pub_subnet.3.id]
+
+  tags = {
+    Name = "My Redis subnet group"
+  }
+}

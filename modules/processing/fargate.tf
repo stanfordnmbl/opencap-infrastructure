@@ -92,7 +92,7 @@ locals {
         DB_HOST = aws_rds_cluster.default.endpoint
         DB_USER_ARN = "${data.aws_secretsmanager_secret.secretmasterDB.arn}:username::"
         DB_PASS_ARN = "${data.aws_secretsmanager_secret.secretmasterDB.arn}:password::"
-        REDIS_URL = aws_elasticache_cluster.redis_cache.cache_nodes.0.address
+        REDIS_URL = "redis://${aws_elasticache_cluster.redis_cache.cache_nodes.0.address}:${aws_elasticache_cluster.redis_cache.cache_nodes.0.port}"
         DEBUG = var.env == "-dev" ? "True" : "False"
         CMD = ""
     }
