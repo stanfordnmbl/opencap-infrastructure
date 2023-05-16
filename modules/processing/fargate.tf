@@ -127,8 +127,8 @@ resource "aws_ecs_task_definition" "task_opencap_api" {
   family                = "${var.app_name}-api${var.env}"
   container_definitions = data.template_file.opencap_api_template.rendered
   execution_role_arn    = aws_iam_role.ecs_tasks_execution_role.arn
-  memory                = var.api_memory # 8192
-  cpu                   = var.api_cpu #2048
+  memory                = var.api_memory
+  cpu                   = var.api_cpu
   requires_compatibilities = ["FARGATE"]
 }
 
@@ -137,8 +137,8 @@ resource "aws_ecs_task_definition" "task_opencap_api_celery" {
   family                = "${var.app_name}-api-worker${var.env}"
   container_definitions = data.template_file.opencap_api_celery_template.rendered
   execution_role_arn    = aws_iam_role.ecs_tasks_execution_role.arn
-  memory                = var.api_memory # 8192
-  cpu                   = var.api_cpu #2048
+  memory                = var.api_celery_memory
+  cpu                   = var.api_celery_cpu
   requires_compatibilities = ["FARGATE"]
 }
 
@@ -147,8 +147,8 @@ resource "aws_ecs_task_definition" "task_opencap_api_celery_beat" {
   family                = "${var.app_name}-api-beat${var.env}"
   container_definitions = data.template_file.opencap_api_celery_beat_template.rendered
   execution_role_arn    = aws_iam_role.ecs_tasks_execution_role.arn
-  memory                = var.api_memory # 8192
-  cpu                   = var.api_cpu #2048
+  memory                = var.api_celery_beat_memory
+  cpu                   = var.api_celery_beat_cpu
   requires_compatibilities = ["FARGATE"]
 }
 

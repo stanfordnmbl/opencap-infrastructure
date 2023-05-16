@@ -10,6 +10,10 @@ module "processing" {
     api_memory = 2048
     api_cpu = 1024
     api_servers = 1
+    api_celery_memory = 1024
+    api_celery_cpu = 512
+    api_celery_beat_memory = 1024
+    api_celery_beat_cpu = 512
     
     source = "../modules/processing"
 }
