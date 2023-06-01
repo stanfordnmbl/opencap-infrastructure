@@ -72,7 +72,11 @@
         {
           "name": "SENDGRID_API_KEY",
           "valueFrom": "${SENDGRID_API_KEY}"
-        }        
+        },
+        {
+          "name": "SENTRY_DSN",
+          "valueFrom": "${SENTRY_DSN}"
+        }
       ],
       "resourceRequirements": null,
       "ulimits": null,
