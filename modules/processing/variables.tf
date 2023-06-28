@@ -57,22 +57,22 @@ variable "api_servers" {
 variable "api_celery_memory" {
   type        = number
   description = "Fargate API celery memory"
-  default     = 1024
+  default     = 4096
 }
 variable "api_celery_cpu" {
   type        = number
   description = "Fargate API celery cpu"
-  default     = 512
+  default     = 1024
 }
 variable "api_celery_beat_memory" {
   type        = number
   description = "Fargate API celery memory"
-  default     = 1024
+  default     = 512
 }
 variable "api_celery_beat_cpu" {
   type        = number
   description = "Fargate API celery cpu"
-  default     = 512
+  default     = 256
 }
 
 variable "cidr" {
