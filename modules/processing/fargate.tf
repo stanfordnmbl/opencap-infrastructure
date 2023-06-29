@@ -162,6 +162,7 @@ resource "aws_lb" "opencap-api" {
   subnets            = [aws_subnet.pub_subnet.0.id, aws_subnet.pub_subnet.1.id, aws_subnet.pub_subnet.2.id, aws_subnet.pub_subnet.3.id]
  
   enable_deletion_protection = false
+  idle_timeout = 4000
 }
  
 resource "aws_alb_target_group" "opencap-api" {
