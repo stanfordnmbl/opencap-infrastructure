@@ -12,8 +12,8 @@ module "processing" {
     api_servers = 1
     api_celery_memory = 1024
     api_celery_cpu = 512
-    api_celery_beat_memory = 1024
-    api_celery_beat_cpu = 512
+    api_celery_beat_memory = 512
+    api_celery_beat_cpu = 256
     
     source = "../modules/processing"
 }
