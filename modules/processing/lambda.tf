@@ -3,17 +3,22 @@ variable "opencap_analysis_max_centerofmass_vpos_ecr_repository" {
   description = "Repository"
 }
 
+# Functions
+
+# Analysis Max Center of Mass Vpos
+
 resource "aws_lambda_function" "analysis_max_centerofmass_vpos" {
-  function_name = "analysis-max-centerofmass-vpos-${var.env}"
+  function_name = "analysis-max-centerofmass-vpos${var.env}"
   timeout       = 500 # seconds
-  image_uri     = "${var.opencap_analysis_max_centerofmass_vpos_ecr_repository}"
+  image_uri     = "${var.opencap_analysis_max_centerofmass_vpos_ecr_repository}:latest"
   package_type  = "Image"
 
   role = aws_iam_role.analysis_functions_execution_role.arn
 
   environment {
     variables = {
-      ENVIRONMENT = var.env
+      API_TOKEN = "arn:aws:secretsmanager:us-west-2:660440363484:secret:AnalysisFunctions-dev-TpGO1s:api_token::"
+      API_URL = "arn:aws:secretsmanager:us-west-2:660440363484:secret:AnalysisFunctions-dev-TpGO1s:api_url::"
     }
   }
 }
@@ -33,11 +38,18 @@ resource "aws_lambda_function_url" "analysis_max_centerofmass_vpos_url" {
   }
 }
 
+resource "aws_cloudwatch_log_group" "analysis_max_centerofmass_vpos_logs" {
+  name              = "/aws/lambda/${aws_lambda_function.analysis_max_centerofmass_vpos.function_name}"
+  retention_in_days = 90
+}
+
+# IAM Role
 
 resource "aws_iam_role" "analysis_functions_execution_role" {
-  name = "analysis-functions-execution-role-${var.env}"
+  name = "analysis-functions-execution-role${var.env}"
 
   assume_role_policy = jsonencode({
+    "Version" : "2012-10-17",
     Statement = [
       {
         Action = "sts:AssumeRole"
@@ -48,4 +60,28 @@ resource "aws_iam_role" "analysis_functions_execution_role" {
       },
     ]
   })
+}
+
+# Policy
+
+resource "aws_iam_policy" "analysis_functions_execution_policy" {
+  name   = "analysis-functions-execution-policy${var.env}"
+  policy = jsonencode({
+    "Version" : "2012-10-17",
+    "Statement" : [
+      {
+        Action : [
+          "logs:CreateLogStream",
+          "logs:PutLogEvents"
+        ],
+        Effect : "Allow",
+        Resource : "arn:aws:logs:*:*:*"
+      }
+    ]
+  })
+}
+
+resource "aws_iam_role_policy_attachment" "analysis_functions_execution_policy_attachment" {
+  role = aws_iam_role.analysis_functions_execution_role.id
+  policy_arn = aws_iam_policy.analysis_functions_execution_policy.arn
 }
