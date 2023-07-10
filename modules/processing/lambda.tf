@@ -3,22 +3,31 @@ variable "opencap_analysis_max_centerofmass_vpos_ecr_repository" {
   description = "Repository"
 }
 
+data "aws_secretsmanager_secret" "analysis_common_secrets" {
+  arn = "arn:aws:secretsmanager:us-west-2:660440363484:secret:AnalysisFunctions${var.env}-TpGO1s"
+}
+
+data "aws_secretsmanager_secret_version" "analysis_common_secrets_version" {
+  secret_id = data.aws_secretsmanager_secret.analysis_common_secrets.id
+}
+
 # Functions
 
 # Analysis Max Center of Mass Vpos
 
 resource "aws_lambda_function" "analysis_max_centerofmass_vpos" {
   function_name = "analysis-max-centerofmass-vpos${var.env}"
-  timeout       = 500 # seconds
+  timeout       = 900 # seconds
   image_uri     = "${var.opencap_analysis_max_centerofmass_vpos_ecr_repository}:latest"
   package_type  = "Image"
+  memory_size = 1024
 
   role = aws_iam_role.analysis_functions_execution_role.arn
 
   environment {
     variables = {
-      API_TOKEN = "arn:aws:secretsmanager:us-west-2:660440363484:secret:AnalysisFunctions-dev-TpGO1s:api_token::"
-      API_URL = "arn:aws:secretsmanager:us-west-2:660440363484:secret:AnalysisFunctions-dev-TpGO1s:api_url::"
+      API_TOKEN = "${jsondecode(data.aws_secretsmanager_secret_version.analysis_common_secrets_version.secret_string)["api_token"]}"
+      API_URL = "${jsondecode(data.aws_secretsmanager_secret_version.analysis_common_secrets_version.secret_string)["api_url"]}"
     }
   }
 }
@@ -72,7 +81,8 @@ resource "aws_iam_policy" "analysis_functions_execution_policy" {
       {
         Action : [
           "logs:CreateLogStream",
-          "logs:PutLogEvents"
+          "logs:PutLogEvents",
+          "lambda:UpdateFunctionCode"
         ],
         Effect : "Allow",
         Resource : "arn:aws:logs:*:*:*"
