@@ -82,7 +82,6 @@ resource "aws_iam_policy" "analysis_functions_execution_policy" {
         Action : [
           "logs:CreateLogStream",
           "logs:PutLogEvents",
-          "lambda:UpdateFunctionCode"
         ],
         Effect : "Allow",
         Resource : "arn:aws:logs:*:*:*"
