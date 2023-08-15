@@ -57,7 +57,7 @@ variable "api_servers" {
 variable "api_celery_memory" {
   type        = number
   description = "Fargate API celery memory"
-  default     = 4096
+  default     = 8192
 }
 variable "api_celery_cpu" {
   type        = number
