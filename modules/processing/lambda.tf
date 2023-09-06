@@ -64,7 +64,7 @@ resource "aws_lambda_function" "gait_analysis" {
   timeout       = 900 # seconds
   image_uri     = "${var.opencap_gait_analysis_ecr_repository}:latest"
   package_type  = "Image"
-  memory_size = 1024
+  memory_size = 4096
 
   role = aws_iam_role.analysis_functions_execution_role.arn
 
