@@ -25,7 +25,7 @@ resource "aws_lambda_function" "analysis_max_centerofmass_vpos" {
   timeout       = 900 # seconds
   image_uri     = "${var.opencap_analysis_max_centerofmass_vpos_ecr_repository}:latest"
   package_type  = "Image"
-  memory_size = 1024
+  memory_size = 4096
 
   role = aws_iam_role.analysis_functions_execution_role.arn
 
