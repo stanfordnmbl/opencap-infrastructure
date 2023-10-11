@@ -89,7 +89,8 @@ locals {
         API_AWS_KEY = "arn:aws:secretsmanager:us-west-2:660440363484:secret:APICredentials-Dag8bw:aws_access_key_id::"
         API_AWS_SECRET = "arn:aws:secretsmanager:us-west-2:660440363484:secret:APICredentials-Dag8bw:aws_secret_access_key::"
         SENDGRID_API_KEY = "arn:aws:secretsmanager:us-west-2:660440363484:secret:APICredentials-Dag8bw:sendgrid_api_key::"
-        SENTRY_DSN = "arn:aws:secretsmanager:us-west-2:660440363484:secret:APICredentials-Dag8bw:sentry_dsn::"
+        SENTRY_DSN = var.env == "-dev" ? "arn:aws:secretsmanager:us-west-2:660440363484:secret:APICredentials-Dag8bw:sentry_dsn_dev::" : "arn:aws:secretsmanager:us-west-2:660440363484:secret:APICredentials-Dag8bw:sentry_dsn::"
+        # SENTRY_DSN = "arn:aws:secretsmanager:us-west-2:660440363484:secret:APICredentials-Dag8bw:sentry_dsn::"
         DB_HOST = aws_rds_cluster.default.endpoint
         DB_USER_ARN = "${data.aws_secretsmanager_secret.secretmasterDB.arn}:username::"
         DB_PASS_ARN = "${data.aws_secretsmanager_secret.secretmasterDB.arn}:password::"
