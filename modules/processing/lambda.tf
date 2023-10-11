@@ -8,8 +8,12 @@ variable "opencap_gait_analysis_ecr_repository" {
   description = "Repository"
 }
 
+# data "aws_secretsmanager_secret" "analysis_common_secrets" {
+#   arn = "arn:aws:secretsmanager:us-west-2:660440363484:secret:AnalysisFunctions${var.env}-TpGO1s"
+# }
+
 data "aws_secretsmanager_secret" "analysis_common_secrets" {
-  arn = "arn:aws:secretsmanager:us-west-2:660440363484:secret:AnalysisFunctions${var.env}-TpGO1s"
+  arn = var.env == "-dev" ? "arn:aws:secretsmanager:us-west-2:660440363484:secret:AnalysisFunctions-dev-TpGO1s" : "arn:aws:secretsmanager:us-west-2:660440363484:secret:AnalysisFunctions-B5F3xs"
 }
 
 data "aws_secretsmanager_secret_version" "analysis_common_secrets_version" {
