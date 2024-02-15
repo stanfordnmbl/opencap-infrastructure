@@ -105,7 +105,7 @@ resource "aws_cloudwatch_log_group" "gait_analysis_logs" {
   retention_in_days = 90
 }
 
-# Treadmll gait analysis
+# Treadmill gait analysis
 
 resource "aws_lambda_function" "treadmill_gait_analysis" {
   function_name = "treadmill-gait-analysis${var.env}"
