@@ -7,5 +7,6 @@ module "processing" {
     mmpose_ecr_repository = aws_ecr_repository.opencap-mmpose.repository_url
     opencap_analysis_max_centerofmass_vpos_ecr_repository = "660440363484.dkr.ecr.us-west-2.amazonaws.com/opencap-analysis/max_centerofmass_vpos"
     opencap_gait_analysis_ecr_repository = "660440363484.dkr.ecr.us-west-2.amazonaws.com/opencap-analysis/gait_analysis"
+    opencap_treadmill_gait_analysis_ecr_repository = "660440363484.dkr.ecr.us-west-2.amazonaws.com/opencap-analysis/treadmill_gait_analysis"
     source = "../modules/processing"
 }
