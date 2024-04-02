@@ -13,6 +13,11 @@ variable "opencap_treadmill_gait_analysis_ecr_repository" {
   description = "Repository"
 }
 
+variable "opencap_squat_analysis_ecr_repository" {
+  type        = string
+  description = "Repository"
+}
+
 # data "aws_secretsmanager_secret" "analysis_common_secrets" {
 #   arn = "arn:aws:secretsmanager:us-west-2:660440363484:secret:AnalysisFunctions${var.env}-TpGO1s"
 # }
@@ -73,7 +78,7 @@ resource "aws_lambda_function" "gait_analysis" {
   timeout       = 900 # seconds
   image_uri     = "${var.opencap_gait_analysis_ecr_repository}:latest"
   package_type  = "Image"
-  memory_size = 4096
+  memory_size = 9984
 
   role = aws_iam_role.analysis_functions_execution_role.arn
 
@@ -112,7 +117,7 @@ resource "aws_lambda_function" "treadmill_gait_analysis" {
   timeout       = 900 # seconds
   image_uri     = "${var.opencap_treadmill_gait_analysis_ecr_repository}:latest"
   package_type  = "Image"
-  memory_size = 4096
+  memory_size = 9984
 
   role = aws_iam_role.analysis_functions_execution_role.arn
 
@@ -141,6 +146,45 @@ resource "aws_lambda_function_url" "treadmill_gait_analysis_url" {
 
 resource "aws_cloudwatch_log_group" "treadmill_gait_analysis_logs" {
   name              = "/aws/lambda/${aws_lambda_function.treadmill_gait_analysis.function_name}"
+  retention_in_days = 90
+}
+
+# Squat analysis
+
+resource "aws_lambda_function" "squat_analysis" {
+  function_name = "squat-analysis${var.env}"
+  timeout       = 900 # seconds
+  image_uri     = "${var.opencap_squat_analysis_ecr_repository}:latest"
+  package_type  = "Image"
+  memory_size = 9984
+
+  role = aws_iam_role.analysis_functions_execution_role.arn
+
+  environment {
+    variables = {
+      API_TOKEN = "${jsondecode(data.aws_secretsmanager_secret_version.analysis_common_secrets_version.secret_string)["api_token"]}"
+      API_URL = "${jsondecode(data.aws_secretsmanager_secret_version.analysis_common_secrets_version.secret_string)["api_url"]}"
+    }
+  }
+}
+
+
+resource "aws_lambda_function_url" "squat_analysis_url" {
+  function_name      = aws_lambda_function.squat_analysis.function_name
+  authorization_type = "NONE"
+
+  cors {
+    allow_credentials = true
+    allow_origins     = ["*"]
+    allow_methods     = ["*"]
+    allow_headers     = ["date", "keep-alive"]
+    expose_headers    = ["keep-alive", "date"]
+    max_age           = 86400
+  }
+}
+
+resource "aws_cloudwatch_log_group" "squat_analysis_logs" {
+  name              = "/aws/lambda/${aws_lambda_function.squat_analysis.function_name}"
   retention_in_days = 90
 }
 
