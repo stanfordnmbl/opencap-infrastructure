@@ -57,6 +57,15 @@ variable "processing_asg_scaling_config" {
   }
 }
 
+variable "processing_asg_scaling_target" {
+  default = 50
+  description = "After how many opencap_trials_pending should the autoscaling kick in"
+}
+
+variable "processing_asg_instance_type" {
+  default = "g5.xlarge"
+}
+
 variable "api_memory" {
   type        = number
   description = "Fargate API memory"
