@@ -23,7 +23,115 @@ data "aws_ami" "latest_ecs" {
   }  
 }
 
+### Launch Template ###
+locals {
+    lt_user_data_raw = <<-EOF
+    #!/bin/bash
+    echo ECS_CLUSTER=${aws_ecs_cluster.cluster.name} >> /etc/ecs/ecs.config
+    EOF
+}
+
+resource "aws_launch_template" "ecs_worker_launch_template" {
+    count = !var.processing_asg_use_launch_config ? 1 : 0
+
+    name_prefix               = "${var.app_name}-processing-workers${var.env}-"
+    image_id                  = data.aws_ami.latest_ecs.image_id
+    iam_instance_profile {
+        name = aws_iam_instance_profile.ecs_agent.name
+    }
+    vpc_security_group_ids    = [aws_security_group.ecs_sg.id]
+    user_data                 = base64encode(local.lt_user_data_raw)
+    instance_type             = "g5.xlarge"
+    key_name                  = aws_key_pair.debug.key_name
+
+    block_device_mappings {
+        device_name = "/dev/xvda"
+
+        ebs {
+            volume_size = 128
+        }
+    }
+
+    network_interfaces {
+        associate_public_ip_address = true
+        security_groups             = [aws_security_group.ecs_sg.id]
+    }
+
+    lifecycle {
+        create_before_destroy = true
+    }
+}
+
+resource "aws_autoscaling_group" "worker_lt_asg" {
+    count = !var.processing_asg_use_launch_config ? 1 : 0
+
+    name                      = "asg${var.env}"
+    vpc_zone_identifier       = [values(aws_subnet.pub_subnet)[0].id]
+    launch_template {
+        id      = aws_launch_template.ecs_worker_launch_template[0].id
+        version = "$Latest"
+    }
+
+    desired_capacity          = var.processing_asg_scaling_config.desired_size
+    min_size                  = var.processing_asg_scaling_config.min_size
+    max_size                  = var.processing_asg_scaling_config.max_size
+
+    health_check_grace_period = 300
+    health_check_type         = "EC2"
+}
+
+## Link ASG to ECS
+resource "aws_ecs_capacity_provider" "worker_lt_gpu_provider" {
+    name = "gpu-capacity-provider${var.env}"
+
+    auto_scaling_group_provider {
+        auto_scaling_group_arn         = var.processing_asg_use_launch_config ? aws_autoscaling_group.opencap_processing_asg[0].arn : aws_autoscaling_group.worker_lt_asg[0].arn
+        managed_termination_protection = "ENABLED"
+
+        managed_scaling {
+            status         = "ENABLED"
+            target_capacity = 100
+            minimum_scaling_step_size = 1
+            maximum_scaling_step_size = 2
+        }
+    }
+}
+
+## Scaling on CloudWatch metric
+# Auto Scaling based on CloudWatch metric
+resource "aws_appautoscaling_target" "ecs_target" {
+    # We're scaling ECS service and AS group 1:1 as we dedicate 1 instance per worker
+    max_capacity       = var.processing_asg_scaling_config.max_size
+    min_capacity       = var.processing_asg_scaling_config.min_size
+
+    resource_id        = "service/${aws_ecs_cluster.cluster.name}/${aws_ecs_service.worker.name}"
+    scalable_dimension = "ecs:service:DesiredCount"
+    service_namespace  = "ecs"
+}
+
+# ToDo: Autoscaling details
+# resource "aws_appautoscaling_policy" "target_tracking" {
+#   name               = "target-tracking-policy"
+#   service_namespace  = aws_appautoscaling_target.ecs_target.service_namespace
+#   resource_id        = aws_appautoscaling_target.ecs_target.resource_id
+#   scalable_dimension = aws_appautoscaling_target.ecs_target.scalable_dimension
+#   policy_type        = "TargetTrackingScaling"
+
+#   target_tracking_scaling_policy_configuration {
+#     target_value       = 50.0
+#     scale_in_cooldown  = 300
+#     scale_out_cooldown = 300
+
+#     predefined_metric_specification {
+#       predefined_metric_type = "opencap_trials_pending"
+#     }
+#   }
+# }
+
+### Launch Configuration | Deprecated ###
 resource "aws_launch_configuration" "ecs_launch_config" {
+    count = var.processing_asg_use_launch_config ? 1 : 0
+
     name                 = "${var.app_name}-processing-workers${var.env}"
     image_id             = data.aws_ami.latest_ecs.image_id
     iam_instance_profile = aws_iam_instance_profile.ecs_agent.name
@@ -38,11 +146,12 @@ resource "aws_launch_configuration" "ecs_launch_config" {
     }
 }
 
-
 resource "aws_autoscaling_group" "opencap_processing_asg" {
+    count = var.processing_asg_use_launch_config ? 1 : 0
+
     name                      = "asg${var.env}"
     vpc_zone_identifier       = [values(aws_subnet.pub_subnet)[0].id]
-    launch_configuration      = aws_launch_configuration.ecs_launch_config.name
+    launch_configuration      = aws_launch_configuration.ecs_launch_config[0].name
 
     desired_capacity          = var.num_machines
     min_size                  = 0
@@ -50,4 +159,3 @@ resource "aws_autoscaling_group" "opencap_processing_asg" {
     health_check_grace_period = 300
     health_check_type         = "EC2"
 }
-

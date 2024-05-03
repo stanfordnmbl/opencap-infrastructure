@@ -39,6 +39,24 @@ variable "num_machines" {
   description = "Number of machines"
   default     = 1
 }
+
+variable "processing_asg_use_launch_config" {
+  default = true
+  description =<<-EOF
+  true: Use launch config for processing autoscaling group, false: use launch template
+  This is for providing a smooth transition from launch config to launch template as LCs are deprecated
+  the goal is to delete this variable along with LC code when all services are using launch templates
+  EOF
+}
+
+variable "processing_asg_scaling_config" {
+  default = {
+    min_size = 0
+    max_size = 0
+    desired_size = 0
+  }
+}
+
 variable "api_memory" {
   type        = number
   description = "Fargate API memory"
