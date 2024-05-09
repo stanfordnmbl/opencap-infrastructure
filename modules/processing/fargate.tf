@@ -139,6 +139,7 @@ resource "aws_ecs_task_definition" "task_opencap_api_celery" {
   family                = "${var.app_name}-api-worker${var.env}"
   container_definitions = data.template_file.opencap_api_celery_template.rendered
   execution_role_arn    = aws_iam_role.ecs_tasks_execution_role.arn
+  task_role_arn         = aws_iam_role.celery_worker_role.arn
   memory                = var.api_celery_memory
   cpu                   = var.api_celery_cpu
   requires_compatibilities = ["FARGATE"]

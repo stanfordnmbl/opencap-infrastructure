@@ -1,17 +1,38 @@
 resource "aws_ecs_cluster" "ecs_cluster" {
-    name  = "${var.app_name}-processing-cluster${var.env}"
+  name  = "${var.app_name}-processing-cluster${var.env}"
 }
 
 resource "aws_ecs_service" "worker" {
-    name            = "worker"
-    cluster         = aws_ecs_cluster.ecs_cluster.id
-    task_definition = aws_ecs_task_definition.task_definition.arn
-    #   desired_count   = var.num_machines
-    # Let auto-scaling manage the number of instances
-    desired_count   = 0
-    deployment_minimum_healthy_percent = 100
+  name            = "worker"
+  cluster         = aws_ecs_cluster.ecs_cluster.id
+  task_definition = aws_ecs_task_definition.task_definition.arn
+  #   desired_count   = var.num_machines
+  # Let auto-scaling manage the number of instances
+  desired_count   = 0
+  deployment_minimum_healthy_percent = 100
 
-    capacity_provider_strategy {
-        capacity_provider = aws_ecs_capacity_provider.worker_lt_gpu_provider.name
-    }
+  capacity_provider_strategy {
+    capacity_provider = aws_ecs_capacity_provider.worker_lt_gpu_provider.name
+  }
+}
+
+resource "aws_cloudwatch_log_group" "logs" {
+  name              = "/ecs/${var.app_name}-processing${var.env}"
+  retention_in_days = 90
+}
+
+resource "aws_cloudwatch_log_group" "openpose-logs" {
+  name              = "/ecs/${var.app_name}-openpose${var.env}"
+  retention_in_days = 90
+}
+
+resource "aws_ecs_task_definition" "task_definition" {
+  family                = "worker${var.env}"
+  container_definitions = data.template_file.task_definition_template.rendered
+  execution_role_arn    = aws_iam_role.ecs_tasks_execution_role.arn
+  task_role_arn         = aws_iam_role.processing_worker_role.arn
+  memory                = 7670
+  volume {
+    name = "data${var.env}"
+  }
 }
