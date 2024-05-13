@@ -63,7 +63,7 @@ variable "processing_asg_scaling_target" {
 }
 
 variable "processing_asg_instance_type" {
-  default = "g5.xlarge"
+  default = "g5.2xlarge"
 }
 
 variable "api_memory" {

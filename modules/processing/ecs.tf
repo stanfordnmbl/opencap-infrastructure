@@ -31,7 +31,8 @@ resource "aws_ecs_task_definition" "task_definition" {
   container_definitions = data.template_file.task_definition_template.rendered
   execution_role_arn    = aws_iam_role.ecs_tasks_execution_role.arn
   task_role_arn         = aws_iam_role.processing_worker_role.arn
-  memory                = 7670
+  # Optional for ECS on EC2, 32768 to saturate g5.2xlarge
+  # memory                = 7670
   volume {
     name = "data${var.env}"
   }
