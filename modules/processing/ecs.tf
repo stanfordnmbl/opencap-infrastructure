@@ -2,6 +2,18 @@ resource "aws_ecs_cluster" "ecs_cluster" {
   name  = "${var.app_name}-processing-cluster${var.env}"
 }
 
+# resource "aws_ecs_cluster_capacity_providers" "default-fargate" {
+#   cluster_name = aws_ecs_cluster.ecs_cluster.name
+
+#   capacity_providers = ["FARGATE"]
+
+#   default_capacity_provider_strategy {
+#     base              = 1
+#     weight            = 100
+#     capacity_provider = "FARGATE"
+#   }
+# }
+
 resource "aws_ecs_service" "worker" {
   name            = "worker"
   cluster         = aws_ecs_cluster.ecs_cluster.id
@@ -13,6 +25,7 @@ resource "aws_ecs_service" "worker" {
 
   capacity_provider_strategy {
     capacity_provider = aws_ecs_capacity_provider.worker_lt_gpu_provider.name
+    weight = 100
   }
 }
 
