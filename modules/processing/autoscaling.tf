@@ -121,9 +121,9 @@ resource "aws_appautoscaling_policy" "target_tracking" {
   policy_type        = "TargetTrackingScaling"
 
   target_tracking_scaling_policy_configuration {
-    target_value       = 50.0
-    scale_in_cooldown  = 300
-    scale_out_cooldown = 300
+    target_value       = var.processing_asg_scaling_target
+    scale_in_cooldown  = 30
+    scale_out_cooldown = 30
 
     customized_metric_specification {
       metric_name = "opencap_trials_pending"

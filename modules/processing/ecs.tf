@@ -32,7 +32,7 @@ resource "aws_ecs_task_definition" "task_definition" {
   execution_role_arn    = aws_iam_role.ecs_tasks_execution_role.arn
   task_role_arn         = aws_iam_role.processing_worker_role.arn
   # Optional for ECS on EC2, 32768 to saturate g5.2xlarge
-  # memory                = 7670
+  memory                = 16384 # TODO might need to be adjusted to support bigger jobs/instances.
   volume {
     name = "data${var.env}"
   }
