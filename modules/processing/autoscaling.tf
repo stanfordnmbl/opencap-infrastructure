@@ -39,7 +39,7 @@ resource "aws_launch_template" "ecs_worker_launch_template" {
     iam_instance_profile {
         name = aws_iam_instance_profile.ecs_agent.name
     }
-    vpc_security_group_ids    = [aws_security_group.ecs_sg.id]
+    # vpc_security_group_ids    = [aws_security_group.ecs_sg.id]
     user_data                 = base64encode(local.lt_user_data_raw)
     instance_type             = var.processing_asg_instance_type
     key_name                  = aws_key_pair.debug.key_name
