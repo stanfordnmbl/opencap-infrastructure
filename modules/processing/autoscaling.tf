@@ -27,7 +27,7 @@ data "aws_ami" "latest_ecs" {
 locals {
     lt_user_data_raw = <<-EOF
     #!/bin/bash
-    echo ECS_CLUSTER=${aws_ecs_cluster.cluster.name} >> /etc/ecs/ecs.config
+    echo ECS_CLUSTER=${aws_ecs_cluster.ecs_cluster.name} >> /etc/ecs/ecs.config
     EOF
 }
 
@@ -82,6 +82,18 @@ resource "aws_autoscaling_group" "worker_lt_asg" {
 
     health_check_grace_period = 300
     health_check_type         = "EC2"
+
+    tag {
+        key                 = "AmazonECSManaged"
+        value               = true
+        propagate_at_launch = true
+    }
+
+    lifecycle {
+      ignore_changes = [
+        desired_capacity,
+      ]
+    }
 }
 
 ## Link ASG to ECS
