@@ -85,7 +85,7 @@ locals {
         OPENCAP_API = "${var.opencap_api_ecr_repository}"
         API_HOST = "${var.api_host}"
         APP_NAME = "${var.app_name}"
-        API_TOKEN = "arn:aws:secretsmanager:us-west-2:660440363484:secret:APICredentials-Dag8bw:api_token::"
+        API_TOKEN = var.env == "-dev" ? "arn:aws:secretsmanager:us-west-2:660440363484:secret:APICredentials-Dag8bw:api_token_dev::" : "arn:aws:secretsmanager:us-west-2:660440363484:secret:APICredentials-Dag8bw:api_token::"
         API_AWS_KEY = "arn:aws:secretsmanager:us-west-2:660440363484:secret:APICredentials-Dag8bw:aws_access_key_id::"
         API_AWS_SECRET = "arn:aws:secretsmanager:us-west-2:660440363484:secret:APICredentials-Dag8bw:aws_secret_access_key::"
         SENDGRID_API_KEY = "arn:aws:secretsmanager:us-west-2:660440363484:secret:APICredentials-Dag8bw:sendgrid_api_key::"
