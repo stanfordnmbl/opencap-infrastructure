@@ -21,7 +21,7 @@ module "processing" {
 
     processing_asg_scaling_config = {
         min_size = 0
-        max_size = 0
+        max_size = 2
         desired_size = 0
     }
 

@@ -25,7 +25,11 @@
       "secrets": [
         {
           "name": "API_TOKEN",
-	  "valueFrom": "${API_TOKEN}"
+	        "valueFrom": "${API_TOKEN}"
+        },
+        {
+          "name": "API_URL",
+          "valueFrom": "${API_URL}"
         }
       ],
       "resourceRequirements": null,
