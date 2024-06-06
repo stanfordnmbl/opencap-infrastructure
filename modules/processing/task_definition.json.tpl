@@ -19,7 +19,11 @@
       "environment": [
         {
           "name": "DOCKERCOMPOSE",
-	  "value": "1"
+	        "value": "1"
+        },
+        {
+          "name": "ECS_ENABLE_CONTAINER_METADATA",
+          "value": "true"
         }
       ],
       "secrets": [
