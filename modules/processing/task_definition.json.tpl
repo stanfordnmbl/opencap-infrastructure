@@ -126,7 +126,7 @@
       "systemControls": [],
       "privileged": null,
       "name": "openpose"
-    }
+    },
     {
       "dnsSearchDomains": [],
       "environmentFiles": null,
