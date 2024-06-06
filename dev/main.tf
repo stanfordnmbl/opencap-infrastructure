@@ -29,6 +29,7 @@ module "processing" {
 
     processing_asg_use_launch_config = false
 
+    # processing_asg_instance_type = "g5.2xlarge"
     processing_asg_instance_type = "g5.xlarge"
     
     source = "../modules/processing"
