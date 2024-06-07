@@ -47,11 +47,6 @@ resource "aws_cloudwatch_log_group" "openpose-logs" {
   retention_in_days = 90
 }
 
-resource "aws_cloudwatch_log_group" "mmpose-logs" {
-  name              = "/ecs/${var.app_name}-mmpose${var.env}"
-  retention_in_days = 90
-}
-
 resource "aws_ecs_task_definition" "task_definition" {
   family                = "worker${var.env}"
   container_definitions = data.template_file.task_definition_template.rendered
