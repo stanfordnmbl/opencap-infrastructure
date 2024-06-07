@@ -70,11 +70,13 @@ variable "processing_ecs_task_memory" {
   description = <<-EOF
   We reserve 768 MiB for System & ECS agent. See `local.lt_user_data_raw`
   https://docs.aws.amazon.com/AmazonECS/latest/developerguide/memory-management.html
+  While in reality there's less memory available, so we're using conservative values here
+  https://github.com/aws/amazon-ecs-agent/issues/3331#issuecomment-1232664501
   Therefore memory value should be set accordingly to `var.processing_asg_instance_type`
-  for g5.xlarge with 16GiB memory: 16384-768 = 15616
-  for g5.2xlarge with 32GiB memory: 32768-768 = 32000
+  for g5.xlarge with 16GiB memory and 768MiB reservation AWS shows 15073 MiB registered
+  for g5.2xlarge with 32GiB memory and 768MiB reservation = let's safely assume 15073*2 = 30146 MiB
   EOF
-  default = 32000
+  default = 30146
 }
 
 variable "api_memory" {
