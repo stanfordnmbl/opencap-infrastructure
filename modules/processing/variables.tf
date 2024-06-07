@@ -66,6 +66,17 @@ variable "processing_asg_instance_type" {
   default = "g5.2xlarge"
 }
 
+variable "processing_ecs_task_memory" {
+  description = <<-EOF
+  We reserve 768 MiB for System & ECS agent. See `local.lt_user_data_raw`
+  https://docs.aws.amazon.com/AmazonECS/latest/developerguide/memory-management.html
+  Therefore memory value should be set accordingly to `var.processing_asg_instance_type`
+  for g5.xlarge with 16GiB memory: 16384-768 = 15616
+  for g5.2xlarge with 32GiB memory: 32768-768 = 32000
+  EOF
+  default = 32000
+}
+
 variable "api_memory" {
   type        = number
   description = "Fargate API memory"
