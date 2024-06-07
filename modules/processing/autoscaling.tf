@@ -27,7 +27,8 @@ data "aws_ami" "latest_ecs" {
 locals {
     lt_user_data_raw = <<-EOF
     #!/bin/bash
-    echo ECS_CLUSTER=${aws_ecs_cluster.ecs_cluster.name} >> /etc/ecs/ecs.config
+    echo 'ECS_CLUSTER=${aws_ecs_cluster.ecs_cluster.name}' >> /etc/ecs/ecs.config
+    echo 'ECS_ENABLE_CONTAINER_METADATA=true' >> /etc/ecs/ecs.config
     EOF
 }
 
