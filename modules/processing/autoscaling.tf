@@ -29,7 +29,7 @@ locals {
     #!/bin/bash
     echo 'ECS_CLUSTER=${aws_ecs_cluster.ecs_cluster.name}' >> /etc/ecs/ecs.config
     echo 'ECS_ENABLE_CONTAINER_METADATA=true' >> /etc/ecs/ecs.config
-    echo 'ECS_RESERVED_MEMORY=768' >> /etc/ecs/ecs.config
+    echo 'ECS_RESERVED_MEMORY=256' >> /etc/ecs/ecs.config
     EOF
 }
 
