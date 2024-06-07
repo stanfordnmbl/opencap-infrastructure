@@ -27,7 +27,9 @@ data "aws_ami" "latest_ecs" {
 locals {
     lt_user_data_raw = <<-EOF
     #!/bin/bash
-    echo ECS_CLUSTER=${aws_ecs_cluster.ecs_cluster.name} >> /etc/ecs/ecs.config
+    echo 'ECS_CLUSTER=${aws_ecs_cluster.ecs_cluster.name}' >> /etc/ecs/ecs.config
+    echo 'ECS_ENABLE_CONTAINER_METADATA=true' >> /etc/ecs/ecs.config
+    echo 'ECS_RESERVED_MEMORY=768' >> /etc/ecs/ecs.config
     EOF
 }
 
@@ -108,7 +110,7 @@ resource "aws_ecs_capacity_provider" "worker_lt_gpu_provider" {
             status         = "ENABLED"
             target_capacity = 100
             minimum_scaling_step_size = 1
-            maximum_scaling_step_size = 2
+            maximum_scaling_step_size = 1
         }
     }
 }
