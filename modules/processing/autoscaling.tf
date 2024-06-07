@@ -110,7 +110,7 @@ resource "aws_ecs_capacity_provider" "worker_lt_gpu_provider" {
             status         = "ENABLED"
             target_capacity = 100
             minimum_scaling_step_size = 1
-            maximum_scaling_step_size = 2
+            maximum_scaling_step_size = 1
         }
     }
 }
