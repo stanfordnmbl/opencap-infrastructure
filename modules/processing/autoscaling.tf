@@ -138,11 +138,61 @@ resource "aws_appautoscaling_policy" "target_tracking" {
     target_value       = var.processing_asg_scaling_target
     scale_in_cooldown  = 30
     scale_out_cooldown = 30
+    disable_scale_in   = false
 
     customized_metric_specification {
-      metric_name = "opencap_trials_pending"
-      namespace   = "Custom/opencap${var.env}"
-      statistic   = "Average"
+        metrics {
+            label = "Get the queue size (the number of messages waiting to be processed)"
+            id    = "trials_pending"
+
+            metric_stat {
+                metric {
+                    metric_name = "opencap_trials_pending"
+                    namespace   = "Custom/opencap${var.env}"
+                }
+                stat = "Average"
+            }
+            return_data = false
+        }
+
+        metrics {
+            label = "Get the ECS running task count (the number of currently running tasks)"
+            id    = "tasks_running"
+
+            metric_stat {
+                metric {
+                    metric_name = "RunningTaskCount"
+                    namespace   = "ECS/ContainerInsights"
+
+                    dimensions {
+                        name  = "ClusterName"
+                        value = aws_ecs_cluster.ecs_cluster.name
+                    }
+
+                    dimensions {
+                        name  = "ServiceName"
+                        value = aws_ecs_service.worker.name
+                    }
+                }
+                stat = "Average"
+            }
+
+            return_data = false
+        }
+
+        metrics {
+            label      = "Number of always available instances"
+            id         = "trials_baseline"
+            expression = var.processing_asg_trials_baseline
+            return_data = false
+        }
+
+        metrics {
+            label       = "Calculate the backlog per instance excluding the baseline instances"
+            id          = "e1"
+            expression  = "(trials_pending - trials_baseline) / tasks_running"
+            return_data = true
+        }
     }
   }
 }

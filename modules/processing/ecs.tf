@@ -1,5 +1,11 @@
 resource "aws_ecs_cluster" "ecs_cluster" {
   name  = "${var.app_name}-processing-cluster${var.env}"
+
+  # Need it for metrics used in auto-scaling
+  setting {
+    name  = "containerInsights"
+    value = "enabled"
+  }
 }
 
 resource "aws_ecs_cluster_capacity_providers" "default" {

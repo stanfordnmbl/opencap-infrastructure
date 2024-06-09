@@ -25,7 +25,8 @@ module "processing" {
         desired_size = 0
     }
 
-    processing_asg_scaling_target = 5
+    processing_asg_scaling_target  = 5
+    processing_asg_trials_baseline = 0
 
     processing_asg_use_launch_config = false
 

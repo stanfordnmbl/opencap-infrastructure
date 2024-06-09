@@ -58,8 +58,13 @@ variable "processing_asg_scaling_config" {
 }
 
 variable "processing_asg_scaling_target" {
-  default = 50
-  description = "After how many opencap_trials_pending should the autoscaling kick in"
+  default = 5
+  description = "How many trials-per-instance the autoscaling should attempt to maintain?"
+}
+
+variable "processing_asg_trials_baseline" {
+  default = 0
+  description = "How many trials the OnPremise infrastructure is capable of processing before autoscaling should kick in?"
 }
 
 variable "processing_asg_instance_type" {
