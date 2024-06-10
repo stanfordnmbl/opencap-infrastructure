@@ -190,7 +190,7 @@ resource "aws_appautoscaling_policy" "target_tracking" {
         metrics {
             label       = "Calculate the backlog per instance excluding the baseline instances"
             id          = "e1"
-            expression  = "(trials_pending - trials_baseline) / tasks_running"
+            expression  = "(trials_pending - trials_baseline) / MAX(tasks_running, 1)"
             return_data = true
         }
     }
