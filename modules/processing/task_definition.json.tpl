@@ -150,12 +150,6 @@
       "linuxParameters": null,
       "cpu": 0,
       "environment": [],
-      "resourceRequirements" : [
-          {
-             "type" : "GPU", 
-             "value" : "1"
-          }
-      ],
       "ulimits": null,
       "dnsServers": [],
       "mountPoints": [
