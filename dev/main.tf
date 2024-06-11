@@ -21,11 +21,12 @@ module "processing" {
 
     processing_asg_scaling_config = {
         min_size = 0
-        max_size = 0
+        max_size = 2
         desired_size = 0
     }
 
-    processing_asg_scaling_target = 5
+    processing_asg_scaling_target  = 5
+    processing_asg_trials_baseline = 3
 
     processing_asg_use_launch_config = false
 
