@@ -63,6 +63,7 @@ resource "aws_ecs_task_definition" "task_definition" {
   container_definitions = data.template_file.task_definition_template.rendered
   execution_role_arn    = aws_iam_role.ecs_tasks_execution_role.arn
   task_role_arn         = aws_iam_role.processing_worker_role.arn
+  
   memory                = var.processing_ecs_task_memory
   volume {
     name = "data${var.env}"
