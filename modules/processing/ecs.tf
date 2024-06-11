@@ -48,8 +48,8 @@ resource "aws_cloudwatch_log_group" "logs" {
   retention_in_days = 90
 }
 
-resource "aws_cloudwatch_log_group" "openpose-logs" {
-  name              = "/ecs/${var.app_name}-openpose${var.env}"
+resource "aws_cloudwatch_log_group" "mmpose-logs" {
+  name              = "/ecs/${var.app_name}-mmpose${var.env}"
   retention_in_days = 90
 }
 

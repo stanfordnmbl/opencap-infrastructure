@@ -78,7 +78,7 @@
         "logDriver": "awslogs",
         "secretOptions": null,
         "options": {
-          "awslogs-group": "/ecs/${APP_NAME}-openpose${ENV}",
+          "awslogs-group": "/ecs/${APP_NAME}-mmpose${ENV}",
           "awslogs-region": "${REGION}",
           "awslogs-stream-prefix": "ecs"
         }
@@ -101,7 +101,7 @@
       "mountPoints": [
         {
           "readOnly": false,
-          "containerPath": "/openpose/data",
+          "containerPath": "/mmpose/data",
           "sourceVolume": "data${ENV}"
         }
       ],
@@ -112,7 +112,7 @@
       "memoryReservation": null,
       "volumesFrom": [],
       "stopTimeout": null,
-      "image": "${OPENPOSE}",
+      "image": "${MMPOSE}",
       "startTimeout": null,
       "firelensConfiguration": null,
       "dependsOn": null,
@@ -129,6 +129,6 @@
       "dockerLabels": {},
       "systemControls": [],
       "privileged": null,
-      "name": "openpose"
+      "name": "mmpose"
     }
   ]
