@@ -20,10 +20,6 @@
         {
           "name": "DOCKERCOMPOSE",
 	        "value": "1"
-        },
-        {
-          "name": "ECS_ENABLE_CONTAINER_METADATA",
-          "value": "true"
         }
       ],
       "secrets": [
@@ -36,7 +32,12 @@
           "valueFrom": "${API_URL}"
         }
       ],
-      "resourceRequirements": null,
+      "resourceRequirements" : [
+          {
+             "type" : "GPU",
+             "value" : "1"
+          }
+      ],
       "ulimits": null,
       "dnsServers": [],
       "mountPoints": [
@@ -90,12 +91,6 @@
       "linuxParameters": null,
       "cpu": 0,
       "environment": [],
-      "resourceRequirements" : [
-          {
-             "type" : "GPU", 
-             "value" : "1"
-          }
-      ],
       "ulimits": null,
       "dnsServers": [],
       "mountPoints": [

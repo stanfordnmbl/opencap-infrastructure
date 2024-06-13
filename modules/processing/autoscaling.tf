@@ -27,9 +27,16 @@ data "aws_ami" "latest_ecs" {
 locals {
     lt_user_data_raw = <<-EOF
     #!/bin/bash
+    # ECS cluster settings
     echo 'ECS_CLUSTER=${aws_ecs_cluster.ecs_cluster.name}' >> /etc/ecs/ecs.config
     echo 'ECS_ENABLE_CONTAINER_METADATA=true' >> /etc/ecs/ecs.config
     echo 'ECS_RESERVED_MEMORY=256' >> /etc/ecs/ecs.config
+    # Modify Docker config to allow GPU sharing
+    sudo rm /etc/sysconfig/docker
+    echo DAEMON_MAXFILES=1048576 | sudo tee -a /etc/sysconfig/docker
+    echo OPTIONS="--default-ulimit nofile=32768:65536 --default-runtime nvidia" | sudo tee -a /etc/sysconfig/docker
+    echo DAEMON_PIDFILE_TIMEOUT=10 | sudo tee -a /etc/sysconfig/docker
+    sudo systemctl restart docker
     EOF
 }
 
