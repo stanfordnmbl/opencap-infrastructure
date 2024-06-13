@@ -28,8 +28,6 @@ module "processing" {
     processing_asg_scaling_target  = 5
     processing_asg_trials_baseline = 3
 
-    processing_asg_use_launch_config = false
-
     # processing_asg_instance_type = "g5.2xlarge"
     # processing_ecs_task_memory = 30146
     processing_asg_instance_type = "g5.xlarge"
