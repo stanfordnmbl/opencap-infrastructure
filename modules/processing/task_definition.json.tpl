@@ -90,7 +90,12 @@
       "command": [],
       "linuxParameters": null,
       "cpu": 0,
-      "environment": [],
+      "environment": [
+        {
+          "name": "NVIDIA_VISIBLE_DEVICES",
+          "value: "all"
+        }
+      ],
       "ulimits": null,
       "dnsServers": [],
       "mountPoints": [
@@ -144,7 +149,12 @@
       "command": [],
       "linuxParameters": null,
       "cpu": 0,
-      "environment": [],
+      "environment": [
+        {
+          "name": "NVIDIA_VISIBLE_DEVICES",
+          "value: "all"
+        }
+      ],
       "ulimits": null,
       "dnsServers": [],
       "mountPoints": [
