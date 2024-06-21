@@ -93,7 +93,7 @@
       "environment": [
         {
           "name": "NVIDIA_VISIBLE_DEVICES",
-          "value: "all"
+          "value": "all"
         }
       ],
       "ulimits": null,
@@ -152,7 +152,7 @@
       "environment": [
         {
           "name": "NVIDIA_VISIBLE_DEVICES",
-          "value: "all"
+          "value": "all"
         }
       ],
       "ulimits": null,
