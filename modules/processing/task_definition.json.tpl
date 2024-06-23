@@ -32,7 +32,12 @@
           "valueFrom": "${API_URL}"
         }
       ],
-      "resourceRequirements" : null,
+      "resourceRequirements" : [
+          {
+             "type" : "GPU",
+             "value" : "1"
+          }
+      ],
       "ulimits": null,
       "dnsServers": [],
       "mountPoints": [
@@ -85,7 +90,12 @@
       "command": [],
       "linuxParameters": null,
       "cpu": 0,
-      "environment": [],
+      "environment": [
+        {
+          "name": "NVIDIA_VISIBLE_DEVICES",
+          "value": "0"
+        }
+      ],
       "ulimits": null,
       "dnsServers": [],
       "mountPoints": [
@@ -139,12 +149,11 @@
       "command": [],
       "linuxParameters": null,
       "cpu": 0,
-      "environment": [],
-      "resourceRequirements" : [
-          {
-             "type" : "GPU",
-             "value" : "1"
-          }
+      "environment": [
+        {
+          "name": "NVIDIA_VISIBLE_DEVICES",
+          "value": "0"
+        }
       ],
       "ulimits": null,
       "dnsServers": [],
