@@ -31,18 +31,6 @@ locals {
     echo 'ECS_CLUSTER=${aws_ecs_cluster.ecs_cluster.name}' >> /etc/ecs/ecs.config
     echo 'ECS_ENABLE_CONTAINER_METADATA=true' >> /etc/ecs/ecs.config
     echo 'ECS_RESERVED_MEMORY=256' >> /etc/ecs/ecs.config
-    # Install jq
-    apt update && apt install -y jq
-    # Modify Docker config to allow GPU sharing
-    # Backup existing daemon.json
-    if [ ! -f /etc/docker/daemon.json ]; then
-        echo '{}' > /etc/docker/daemon.json
-    fi
-    sudo cp /etc/docker/daemon.json /etc/docker/daemon.json.orig
-    # Update the daemon.json file
-    sudo jq '. + {"default-ulimit": {"nofile": ["32768:65536"]}, "default-runtime": "nvidia"}' /etc/docker/daemon.json.orig | sudo tee /etc/docker/daemon.json
-    # Restart Docker to apply changes
-    sudo systemctl restart docker
     EOF
 }
 
