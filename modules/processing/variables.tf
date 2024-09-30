@@ -39,6 +39,42 @@ variable "num_machines" {
   description = "Number of machines"
   default     = 1
 }
+
+variable "processing_asg_scaling_config" {
+  default = {
+    min_size = 0
+    max_size = 0
+    desired_size = 0
+  }
+}
+
+variable "processing_asg_scaling_target" {
+  default = 5
+  description = "How many trials-per-instance the autoscaling should attempt to maintain?"
+}
+
+variable "processing_asg_trials_baseline" {
+  default = 0
+  description = "How many trials the OnPremise infrastructure is capable of processing before autoscaling should kick in?"
+}
+
+variable "processing_asg_instance_type" {
+  default = "g5.2xlarge"
+}
+
+variable "processing_ecs_task_memory" {
+  description = <<-EOF
+  We reserve 768 MiB for System & ECS agent. See `local.lt_user_data_raw`
+  https://docs.aws.amazon.com/AmazonECS/latest/developerguide/memory-management.html
+  While in reality there's less memory available, so we're using conservative values here
+  https://github.com/aws/amazon-ecs-agent/issues/3331#issuecomment-1232664501
+  Therefore memory value should be set accordingly to `var.processing_asg_instance_type`
+  for g5.xlarge with 16GiB memory and 768MiB reservation AWS shows 15073 MiB registered
+  for g5.2xlarge with 32GiB memory and 768MiB reservation = let's safely assume 15073*2 = 30146 MiB
+  EOF
+  default = 30146
+}
+
 variable "api_memory" {
   type        = number
   description = "Fargate API memory"
