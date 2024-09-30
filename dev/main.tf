@@ -18,7 +18,9 @@ module "processing" {
     api_celery_cpu = 512
     api_celery_beat_memory = 512
     api_celery_beat_cpu = 256
+    source = "../modules/processing"
 
+    # For auto-scaling, keep max size to 0 for not using it.
     processing_asg_scaling_config = {
         min_size = 0
         max_size = 0
@@ -32,6 +34,4 @@ module "processing" {
     # processing_ecs_task_memory = 30146
     processing_asg_instance_type = "g5.xlarge"
     processing_ecs_task_memory = 15073
-    
-    source = "../modules/processing"
 }

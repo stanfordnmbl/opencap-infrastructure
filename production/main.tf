@@ -10,4 +10,19 @@ module "processing" {
     opencap_treadmill_gait_analysis_ecr_repository = "660440363484.dkr.ecr.us-west-2.amazonaws.com/opencap-analysis/treadmill_gait_analysis"
     opencap_squat_analysis_ecr_repository = "660440363484.dkr.ecr.us-west-2.amazonaws.com/opencap-analysis/squat_analysis"
     source = "../modules/processing"
+
+    # For auto-scaling, keep max size to 0 for not using it.
+    processing_asg_scaling_config = {
+        min_size = 0
+        max_size = 0
+        desired_size = 0
+    }
+
+    processing_asg_scaling_target  = 5
+    processing_asg_trials_baseline = 3
+
+    # processing_asg_instance_type = "g5.2xlarge"
+    # processing_ecs_task_memory = 30146
+    processing_asg_instance_type = "g5.xlarge"
+    processing_ecs_task_memory = 15073
 }
